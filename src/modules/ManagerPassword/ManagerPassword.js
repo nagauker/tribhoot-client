@@ -25,7 +25,9 @@ const ManagerPassword = ({open, setOpen}) => {
   const [password, setPassword] = useState('')
 
 const sendPassword = () => {
-  axios.post(`${process.env.SERVER}/management/password`,{"password" : password})
+  axios.post(`${process.env.REACT_APP_SERVER}/management/password`,{"password" : password}).catch((err) => {
+    console.log(err);
+  })
 }
 
   return (
@@ -53,7 +55,7 @@ const sendPassword = () => {
           value={password}
           onChange={(event) => setPassword(event.target.value)}
         />
-      <button onClick={sendPassword()}>
+      <button onClick={() => sendPassword()}>
         send
       </button>
           </Box>

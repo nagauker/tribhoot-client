@@ -10,9 +10,6 @@ const App = () => {
 
   useEffect(() => {
     const socket = initiateSocketConnection();
-    socket.on('bla', () => {
-      alert("workkk")
-    })
     return () => {
       disconnectSocket();
     }
