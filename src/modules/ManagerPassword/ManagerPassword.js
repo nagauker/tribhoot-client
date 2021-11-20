@@ -25,7 +25,14 @@ const ManagerPassword = ({open, setOpen}) => {
   const [password, setPassword] = useState('')
 
 const sendPassword = () => {
-  axios.post(`${process.env.REACT_APP_SERVER}/management/password`,{"password" : password}).catch((err) => {
+  axios.post(`${process.env.REACT_APP_SERVER}/management/password`,{"password" : password}).then(response => {
+    console.log(response);
+    if (response.data) {
+      console.log("this is admin");
+    } else {
+      console.log("who are U?");
+    }
+  }).catch((err) => {
     console.log(err);
   })
 }
