@@ -6,8 +6,12 @@ export const initiateSocketConnection = () => {
 	socket = io('http://localhost:8000');
 	console.log(`Connecting socket...`);
     socket.on('connect', () => {
-        console.log('connected');
+        console.log('connected');   
     })
+    socket.on("newUser", () => {
+      alert(`welcome`);
+    });
+
     return socket;
 }
 

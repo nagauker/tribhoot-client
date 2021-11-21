@@ -1,24 +1,33 @@
 import {useEffect,useState} from 'react';
-import ManagerPassword from './modules/ManagerPassword/ManagerPassword';
+import { Route, Routes } from "react-router-dom";
+import makeStyles from "@material-ui/core/styles/makeStyles";
+
 import {initiateSocketConnection, disconnectSocket} from './socketIOUtils'
+import HomePage from './modules/HomePage/HomePage'
+
+const useStyles = makeStyles({
+  root: {
+    height: '100%'
+  }
+});
 
 const App = () => {
-
-  const [messages, setMessages] = useState([]);
-  // const [ws, setWs] = useState(new WebSocket(URL));
-  const [managerPasswordModal, setManagerPasswordModal] = useState(false)
+  const classes = useStyles();
+  const [socket, setSocket] = useState();
 
   useEffect(() => {
-    const socket = initiateSocketConnection();
+    const socketIO = initiateSocketConnection();
+    setSocket(socketIO)
     return () => {
       disconnectSocket();
     }
   }, [])
 
   return (
-    <div className="App">
-      <ManagerPassword open={managerPasswordModal} setOpen={setManagerPasswordModal}/>
-      <button onClick={() => setManagerPasswordModal(true)}>bar</button>
+    <div className={classes.root}>
+      <Routes>
+        <Route exact path="/" element={<HomePage socket={socket}/>} />
+      </Routes>
     </div>
   );
 }
