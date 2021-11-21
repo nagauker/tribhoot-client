@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import Typography from '@material-ui/core/Typography';
 import Card from '@material-ui/core/Card';
@@ -6,6 +6,8 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import grey from '@material-ui/core/colors/grey'
 import { styled } from '@material-ui/core';
+
+import {initiateSocketConnection, disconnectSocket} from '../../socketIOUtils'
 
 const ColorButton = styled(Button)(({ theme }) => ({
   color: theme.palette.getContrastText(grey[900]),
@@ -87,7 +89,7 @@ const useStyles = makeStyles({
     }
 })
 
-const HomePage  = ({}) => {
+const HomePage  = ({socket}) => {
     const classes = useStyles()
     const [gamePin, setGamePin] = useState('')
 
@@ -98,6 +100,10 @@ const HomePage  = ({}) => {
       [],
     )
 
+    const handleEnter = () => {
+        socket.emit("/enterGame", {socketId: socket.id, gamePin})
+    }
+
     return (
         <div className={classes.container}> 
             <div className={classes.background}>
@@ -107,7 +113,7 @@ const HomePage  = ({}) => {
                     <Typography variant='h3' className={classes.title}> נגאוקר! </Typography>
                     <Card className={classes.card}>
                         <TextField variant="outlined" placeholder="קוד משחק" className={classes.input} value={gamePin} onChange={handlePinChange}/>
-                        <ColorButton variant="contained" className={classes.enterGame}> כניסה למשחק </ColorButton>
+                        <ColorButton variant="contained" className={classes.enterGame} onClick={handleEnter}> כניסה למשחק </ColorButton>
                     </Card>
                 </div>
             </div>

@@ -13,9 +13,11 @@ const useStyles = makeStyles({
 
 const App = () => {
   const classes = useStyles();
+  const [socket, setSocket] = useState();
 
   useEffect(() => {
-    const socket = initiateSocketConnection();
+    const socketIO = initiateSocketConnection();
+    setSocket(socketIO)
     return () => {
       disconnectSocket();
     }
@@ -24,7 +26,7 @@ const App = () => {
   return (
     <div className={classes.root}>
       <Routes>
-        <Route exact path="/" element={<HomePage />}/>
+        <Route exact path="/" element={<HomePage socket={socket}/>} />
       </Routes>
     </div>
   );
