@@ -15,6 +15,7 @@ import {
   Route
 } from "react-router-dom";
 import InfoSnackbar from './modules/InfoSnackbar/InfoSnackbar';
+import Game from './modules/Game/Game'
 
 const httpLink = new HttpLink({
   uri: config.HASURA_HTTP_URL,
@@ -66,6 +67,7 @@ const App = () => {
         <BrowserRouter>
           <Routes>
           <Route path="/" element={<GameRegistration />}/>
+          <Route path="game/:gameId" element={<Game/>}/>
                 {/* <ManagerPassword open={managerPasswordModal} setOpen={setManagerPasswordModal}/>
                 <button onClick={() => setManagerPasswordModal(true)}>bar</button> */}
           </Routes>

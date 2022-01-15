@@ -1,15 +1,21 @@
-import {useLazyQuery} from "@apollo/client";
+import {useLazyQuery,useMutation} from "@apollo/client";
 import { useState, useEffect } from "react";
 import {GAME_PIN_CHECK} from '../../graphql/games/games'
 import { styled } from '@mui/material/styles';
-import { useSnackbarUpdate } from "../../utils/Context"; 
+import { useSnackbarUpdate } from "../../utils/Context";
+import { useNavigate } from "react-router-dom"; 
+import { INSERT_PLAYER } from "../../graphql/player/player";
+import CircularProgress from '@mui/material/CircularProgress';
 
 const GameRegistration = () => {
   
   const [gamePin, setGamePin] = useState('')
   const [nickName, setNickname] = useState('')
-  const [checkGamePin, { data }] = useLazyQuery(GAME_PIN_CHECK);
+  const [checkGamePin, { data, loading }] = useLazyQuery(GAME_PIN_CHECK);
+  const [addPlayer, { data:insertPlayerData, loading:insertLoading, error:insertPlayerError }] = useMutation(INSERT_PLAYER);
   const updateSnackbar = useSnackbarUpdate();
+
+  let navigate = useNavigate();
 
   const gamePinHandler = (newValue) => {
     if(/^\d+$/.test(newValue) || newValue.length === 0){
@@ -22,14 +28,21 @@ const GameRegistration = () => {
   }
 
   const submitNickname = () => {
-    updateSnackbar("בפנים!!!!")
+    addPlayer({variables:{userId: "1", gameId:gamePin,nickname:nickName}})
   }
-
+  
   useEffect(() =>{
     if(data && !data.games.length) {
       updateSnackbar('קוד משחק לא תקין')
     }
   },[data,updateSnackbar])
+  
+  useEffect(() => {
+    if(insertPlayerError) console.log(insertPlayerError);
+    if(insertPlayerData || insertPlayerError) {
+      navigate(`/game/${gamePin}`)
+    }
+  },[insertPlayerData,insertPlayerError,navigate,gamePin])
    
   return(
       <Root>
@@ -37,15 +50,18 @@ const GameRegistration = () => {
           <BackgroundCircle/>
             <Form>
               <FormTitle>Nagauker!</FormTitle>
-              <FormDialog>
+              {
+                loading || insertLoading ? <Loading/>
+                :
+                <FormDialog>
               { !data || !data.games.length ?
               <FormInput placeholder="הכנס קוד משחק"
-                         onChange={(event) => gamePinHandler(event.target.value)} 
+              onChange={(event) => gamePinHandler(event.target.value)} 
                          value={gamePin}/>
-              :
+                         :
               <FormInput placeholder="הכנס כינוי"
-                         onChange={(event) => setNickname(event.target.value)} 
-                         value={nickName}/>
+              onChange={(event) => setNickname(event.target.value)} 
+              value={nickName}/>
               }
               { !data || !data.games.length ?
               <FormSubmit onClick={submitGamePin}>
@@ -57,6 +73,7 @@ const GameRegistration = () => {
                 </FormSubmit>
               }
               </FormDialog>
+        }
           </Form>
       </Root>
   )
@@ -163,3 +180,9 @@ const FormSubmit = styled('button')({
     boxShadow: "rgba(0, 0, 0, 0.25) 0px -2px inset",
   }
 })
+
+const Loading = styled(CircularProgress)`
+  height: 80px !important;
+  width: 80px !important;
+  color: white !important;
+`
