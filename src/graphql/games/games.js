@@ -9,13 +9,13 @@ subscription {
   }
   `
 
-  export const GAMES_QUERY = gql`
-  query {
-      games {
-        id
-        created_at
-      }
+  export const GET_GAME_STATUS = gql`
+  query ($gameId: numeric) {
+    games(where: {id: {_eq: $gameId}}) {
+      is_closed
+      is_started
     }
+  }
     `
 export const GAME_PIN_CHECK = gql`
 query ($gameId: numeric) {

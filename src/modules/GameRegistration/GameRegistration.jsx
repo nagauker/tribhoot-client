@@ -28,7 +28,7 @@ const GameRegistration = () => {
   }
 
   const submitNickname = () => {
-    addPlayer({variables:{userId: "1", gameId:gamePin,nickname:nickName}})
+      addPlayer({variables:{userId: "1", gameId:gamePin,nickname:nickName}})
   }
   
   useEffect(() =>{

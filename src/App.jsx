@@ -67,7 +67,9 @@ const App = () => {
         <BrowserRouter>
           <Routes>
           <Route path="/" element={<GameRegistration />}/>
-          <Route path="game/:gameId" element={<Game/>}/>
+          <Route path="game" element={<Game/>}>
+            <Route path=":gameId" element={<Game/>}/>
+          </Route>
                 {/* <ManagerPassword open={managerPasswordModal} setOpen={setManagerPasswordModal}/>
                 <button onClick={() => setManagerPasswordModal(true)}>bar</button> */}
           </Routes>
